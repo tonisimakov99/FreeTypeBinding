@@ -6,4 +6,4 @@ namespace FreeTypeBinding
         public ushort len;
         public byte coverage;
     }
-}}
+}

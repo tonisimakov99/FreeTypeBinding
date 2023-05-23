@@ -12,4 +12,3 @@ namespace FreeTypeBinding
         public void* palette;
     }
 }
-}

@@ -14,4 +14,3 @@ namespace FreeTypeBinding
         public byte* limit;
     }
 }
-}

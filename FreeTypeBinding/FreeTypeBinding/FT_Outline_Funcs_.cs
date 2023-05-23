@@ -7,6 +7,6 @@ namespace FreeTypeBinding
         public FT_Outline_ConicToFunc conic_to;
         public FT_Outline_CubicToFunc cubic_to;
         public int shift;
-        public FT_Pos delta;
+        public long delta;
     }
 }

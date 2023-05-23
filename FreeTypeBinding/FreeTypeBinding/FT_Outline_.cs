@@ -5,7 +5,7 @@ namespace FreeTypeBinding
         public short n_contours;
         public short n_points;
         public FT_Vector* points;
-        public sbyte* tags;
+        public byte* tags;
         public short* contours;
         public int flags;
     }
