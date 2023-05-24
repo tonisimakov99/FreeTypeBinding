@@ -2,27 +2,27 @@ namespace FreeTypeBinding
 {
     public unsafe struct FT_GlyphSlotRec_
     {
-        public FT_Library library;
-        public FT_Face face;
-        public FT_GlyphSlot next;
-        public FT_UInt glyph_index;
-        public FT_Generic generic;
-        public FT_Glyph_Metrics metrics;
-        public FT_Fixed linearHoriAdvance;
-        public FT_Fixed linearVertAdvance;
-        public FT_Vector advance;
-        public FT_Glyph_Format format;
-        public FT_Bitmap bitmap;
-        public FT_Int bitmap_left;
-        public FT_Int bitmap_top;
-        public FT_Outline outline;
-        public FT_UInt num_subglyphs;
-        public FT_SubGlyph subglyphs;
+        public FT_LibraryRec_* library;
+        public FT_FaceRec_* face;
+        public FT_GlyphSlotRec_* next;
+        public uint glyph_index;
+        public FT_Generic_ generic;
+        public FT_Glyph_Metrics_ metrics;
+        public long linearHoriAdvance;
+        public long linearVertAdvance;
+        public FT_Vector_ advance;
+        public FT_Glyph_Format_ format;
+        public FT_Bitmap_ bitmap;
+        public int bitmap_left;
+        public int bitmap_top;
+        public FT_Outline_ outline;
+        public uint num_subglyphs;
+        public FT_SubGlyphRec_* subglyphs;
         public void* control_data;
         public long control_len;
-        public FT_Pos lsb_delta;
-        public FT_Pos rsb_delta;
+        public long lsb_delta;
+        public long rsb_delta;
         public void* other;
-        public FT_Slot_Internal internal;
+        public FT_Slot_InternalRec_* internal;
     }
 }

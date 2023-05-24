@@ -2,8 +2,8 @@ namespace FreeTypeBinding
 {
     public unsafe struct FT_ListNodeRec_
     {
-        public FT_ListNode prev;
-        public FT_ListNode next;
+        public FT_ListNodeRec_* prev;
+        public FT_ListNodeRec_* next;
         public void* data;
     }
 }
