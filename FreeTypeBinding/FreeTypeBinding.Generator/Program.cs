@@ -48,7 +48,7 @@ namespace FreeTypeBinding.Generator
 
             var parseResult = ClangParser.ParseSourceFiles(
                 new[] {
-                        options.FilePath,
+                        options.FilePath
                 }, parserOptions);
 
             foreach (var file in Directory.GetFiles(options.OutDir).Where(t => t.EndsWith(".cs")))
@@ -76,7 +76,12 @@ namespace FreeTypeBinding.Generator
 
             var attribute = SyntaxFactory.Attribute(
                 SyntaxFactory.IdentifierName("DllImport"),
-                SyntaxFactory.AttributeArgumentList(new SeparatedSyntaxList<AttributeArgumentSyntax>().Add(SyntaxFactory.AttributeArgument(SyntaxFactory.LiteralExpression(SyntaxKind.StringLiteralExpression, SyntaxFactory.Literal("freetype.dll")))))
+                SyntaxFactory.AttributeArgumentList(
+                    new SeparatedSyntaxList<AttributeArgumentSyntax>().Add(
+                        SyntaxFactory.AttributeArgument(
+                            SyntaxFactory.LiteralExpression(
+                                SyntaxKind.StringLiteralExpression,
+                                SyntaxFactory.Literal("freetype.dll")))))
                 );
 
             var funcSyntaxTypes = new List<MethodDeclarationSyntax>();
@@ -113,9 +118,7 @@ namespace FreeTypeBinding.Generator
 
 
                         funcSyntaxTypes.Add(funcSyntax);
-
                     }
-
                 }
 
                 classSyntax = classSyntax.AddMembers(funcSyntaxTypes.ToArray());
@@ -136,7 +139,14 @@ namespace FreeTypeBinding.Generator
             var functionType = type as FunctionType;
 
             if (typedefType != null)
-                return GetTypeSyntax(context, typedefType.Declaration.Type);
+            {
+                if (typedefType.Declaration.Name == "FT_Error")
+                {
+                    var enums = enumerations.
+                }
+                else
+                    return GetTypeSyntax(context, typedefType.Declaration.Type);
+            }
 
             if (pointerType != null)
                 return SyntaxFactory.PointerType(GetTypeSyntax(context, pointerType.Pointee));
@@ -153,7 +163,17 @@ namespace FreeTypeBinding.Generator
             }
 
             if (functionType != null)
-                return SyntaxFactory.FunctionPointerType();
+            {
+                var parameters = new SeparatedSyntaxList<FunctionPointerParameterSyntax>();
+
+                foreach (var parameter in functionType.Parameters)
+                    parameters = parameters.Add(SyntaxFactory.FunctionPointerParameter(GetTypeSyntax(context, parameter.Type)));
+
+                return SyntaxFactory.FunctionPointerType(
+                    SyntaxFactory.FunctionPointerCallingConvention(SyntaxFactory.Token(SyntaxKind.UnmanagedKeyword)),
+                    SyntaxFactory.FunctionPointerParameterList(parameters)
+                    );
+            }
 
             throw new System.Exception("type not handled");
         }
@@ -178,19 +198,21 @@ namespace FreeTypeBinding.Generator
             if (enumerations == default)
             {
                 enumerations = new Dictionary<string, Enumeration>();
-
+                var errCount = 0;
                 foreach (var translationUnit in context.TranslationUnits)
                 {
                     foreach (var _enum in translationUnit.Enums)
                     {
                         if (_enum.Name == "")
-                            System.Console.WriteLine(_enum.DebugText);
+                        {
+                            enumerations.Add($"FT_Error{errCount}", _enum);
+                            errCount++;
+                        }
                         else
                             enumerations.Add(_enum.Name, _enum);
                     }
                 }
             }
-
 
             registeredTypes.Add(tagType.Declaration.Name, tagType);
 
@@ -209,7 +231,7 @@ namespace FreeTypeBinding.Generator
                         var typeSyntax = GetTypeSyntax(context, field.Type);
                         var variablesList = new SeparatedSyntaxList<VariableDeclaratorSyntax>();
                         var name = field.Name;
-                        if (name == "internal" || name == "base")
+                        if (name == "internal" || name == "base" || name == "params")
                             name = "_" + name;
                         variablesList = variablesList.Add(SyntaxFactory.VariableDeclarator(name));
                         var fieldDeclaration = SyntaxFactory.FieldDeclaration(SyntaxFactory.VariableDeclaration(typeSyntax, variablesList));
