@@ -140,11 +140,11 @@ namespace FreeTypeBinding.Generator
 
             if (typedefType != null)
             {
-                if (typedefType.Declaration.Name == "FT_Error")
-                {
-                    var enums = enumerations.
-                }
-                else
+                //if (typedefType.Declaration.Name == "FT_Error")
+                //{
+                //    var enums = enumerations.
+                //}
+                //else
                     return GetTypeSyntax(context, typedefType.Declaration.Type);
             }
 
