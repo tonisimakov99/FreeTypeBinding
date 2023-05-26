@@ -5,6 +5,6 @@ namespace FreeTypeBinding
         public FT_FaceRec_* face;
         public FT_Generic_ generic;
         public FT_Size_Metrics_ metrics;
-        public FT_Size_InternalRec_* internal;
+        public FT_Size_InternalRec_* _internal;
     }
 }

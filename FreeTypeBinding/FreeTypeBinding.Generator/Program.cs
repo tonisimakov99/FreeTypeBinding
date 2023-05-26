@@ -208,7 +208,10 @@ namespace FreeTypeBinding.Generator
                     {
                         var typeSyntax = GetTypeSyntax(context, field.Type);
                         var variablesList = new SeparatedSyntaxList<VariableDeclaratorSyntax>();
-                        variablesList = variablesList.Add(SyntaxFactory.VariableDeclarator(field.Name));
+                        var name = field.Name;
+                        if (name == "internal" || name == "base")
+                            name = "_" + name;
+                        variablesList = variablesList.Add(SyntaxFactory.VariableDeclarator(name));
                         var fieldDeclaration = SyntaxFactory.FieldDeclaration(SyntaxFactory.VariableDeclaration(typeSyntax, variablesList));
 
                         fieldDeclaration = fieldDeclaration.AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword));
@@ -222,7 +225,39 @@ namespace FreeTypeBinding.Generator
             }
             else if (enumerations.ContainsKey(tagType.Declaration.Name))
             {
+                var _enum = enumerations[tagType.Declaration.Name];
+                using (var fileWriter = new StreamWriter(File.OpenWrite($"{options.OutDir}/{_enum.Name}.cs")))
+                {
+                    var namespaceNameSyntax = SyntaxFactory.IdentifierName(options.Namespace);
+                    var root = SyntaxFactory.NamespaceDeclaration(namespaceNameSyntax);
+                    var type = _enum.Type as BuiltinType;
 
+                    var _enumDeclaration = SyntaxFactory.EnumDeclaration(_enum.Name);
+                    _enumDeclaration = _enumDeclaration.AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword));
+                    _enumDeclaration = _enumDeclaration.WithBaseList(
+                        SyntaxFactory.BaseList(
+                            new SeparatedSyntaxList<BaseTypeSyntax>().Add(SyntaxFactory.SimpleBaseType(GetTypeSyntax(context, type)))));
+
+                    foreach (var item in _enum.Items)
+                    {
+                        if (type.Type == PrimitiveType.Int)
+                        {
+                            var _enumMemberDeclaration = SyntaxFactory.EnumMemberDeclaration(item.Name);
+                            _enumMemberDeclaration = _enumMemberDeclaration.WithEqualsValue(
+                                SyntaxFactory.EqualsValueClause(
+                                    SyntaxFactory.LiteralExpression(
+                                        SyntaxKind.StringLiteralExpression,
+                                        SyntaxFactory.Literal((int)item.Value))));
+                            _enumDeclaration = _enumDeclaration.AddMembers(_enumMemberDeclaration);
+                        }
+                        else
+                            throw new System.Exception("not supported type");
+                    }
+
+                    root = root.AddMembers(_enumDeclaration);
+
+                    fileWriter.Write(root.NormalizeWhitespace().ToFullString());
+                }
             }
             else
             {

@@ -32,6 +32,6 @@ namespace FreeTypeBinding
         public FT_ListRec_ sizes_list;
         public FT_Generic_ autohint;
         public void* extensions;
-        public FT_Face_InternalRec_* internal;
+        public FT_Face_InternalRec_* _internal;
     }
 }

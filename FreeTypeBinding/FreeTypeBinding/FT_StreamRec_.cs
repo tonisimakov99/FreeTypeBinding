@@ -2,7 +2,7 @@ namespace FreeTypeBinding
 {
     public unsafe struct FT_StreamRec_
     {
-        public byte* base;
+        public byte* _base;
         public ulong size;
         public ulong pos;
         public FT_StreamDesc_ descriptor;

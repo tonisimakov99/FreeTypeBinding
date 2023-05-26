@@ -23,6 +23,6 @@ namespace FreeTypeBinding
         public long lsb_delta;
         public long rsb_delta;
         public void* other;
-        public FT_Slot_InternalRec_* internal;
+        public FT_Slot_InternalRec_* _internal;
     }
 }
