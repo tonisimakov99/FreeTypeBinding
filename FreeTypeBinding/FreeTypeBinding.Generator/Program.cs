@@ -129,7 +129,7 @@ namespace FreeTypeBinding.Generator
             return 0;
         }
 
-        private static Dictionary<string, Type> registeredTypes = new Dictionary<string, Type>();
+        private static List<string> registeredTypes = new List<string>();
         private static TypeSyntax GetTypeSyntax(ASTContext context, Type type)
         {
             var typedefType = type as TypedefType;
@@ -140,12 +140,15 @@ namespace FreeTypeBinding.Generator
 
             if (typedefType != null)
             {
-                //if (typedefType.Declaration.Name == "FT_Error")
-                //{
-                //    var enums = enumerations.
-                //}
-                //else
-                    return GetTypeSyntax(context, typedefType.Declaration.Type);
+                if (typedefType.Declaration.Name == "FT_Error")
+                    return GetTypeSyntax(context, new TagType()
+                    {
+                        Declaration = new Enumeration()
+                        {
+                            Name = "FT_Error"
+                        }
+                    });
+                return GetTypeSyntax(context, typedefType.Declaration.Type);
             }
 
             if (pointerType != null)
@@ -156,8 +159,8 @@ namespace FreeTypeBinding.Generator
 
             if (tagType != null)
             {
-                if (!registeredTypes.ContainsKey(tagType.Declaration.Name))
-                    RegisterType(context, tagType);
+                if (!registeredTypes.Contains(tagType.Declaration.Name))
+                    RegisterType(context, tagType.Declaration.Name);
 
                 return SyntaxFactory.ParseTypeName(tagType.Declaration.Name);
             }
@@ -180,7 +183,7 @@ namespace FreeTypeBinding.Generator
 
         private static Dictionary<string, Class> classes;
         private static Dictionary<string, Enumeration> enumerations;
-        private static void RegisterType(ASTContext context, TagType tagType)
+        private static void RegisterType(ASTContext context, string typeName)
         {
             if (classes == default)
             {
@@ -205,7 +208,13 @@ namespace FreeTypeBinding.Generator
                     {
                         if (_enum.Name == "")
                         {
-                            enumerations.Add($"FT_Error{errCount}", _enum);
+                            if (errCount == 0)
+                                enumerations.Add($"", _enum);
+                            else
+                            {
+                                _enum.Name = "FT_Error";
+                                enumerations.Add("FT_Error", _enum);
+                            }
                             errCount++;
                         }
                         else
@@ -214,11 +223,11 @@ namespace FreeTypeBinding.Generator
                 }
             }
 
-            registeredTypes.Add(tagType.Declaration.Name, tagType);
+            registeredTypes.Add(typeName);
 
-            if (classes.ContainsKey(tagType.Declaration.Name))
+            if (classes.ContainsKey(typeName))
             {
-                var _class = classes[tagType.Declaration.Name];
+                var _class = classes[typeName];
                 using (var fileWriter = new StreamWriter(File.OpenWrite($"{options.OutDir}/{_class.Name}.cs")))
                 {
                     var namespaceNameSyntax = SyntaxFactory.IdentifierName(options.Namespace);
@@ -245,9 +254,9 @@ namespace FreeTypeBinding.Generator
                     fileWriter.Write(root.NormalizeWhitespace().ToFullString());
                 }
             }
-            else if (enumerations.ContainsKey(tagType.Declaration.Name))
+            else if (enumerations.ContainsKey(typeName))
             {
-                var _enum = enumerations[tagType.Declaration.Name];
+                var _enum = enumerations[typeName];
                 using (var fileWriter = new StreamWriter(File.OpenWrite($"{options.OutDir}/{_enum.Name}.cs")))
                 {
                     var namespaceNameSyntax = SyntaxFactory.IdentifierName(options.Namespace);
