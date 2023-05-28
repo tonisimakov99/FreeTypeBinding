@@ -1,8 +1,11 @@
 namespace FreeTypeBinding
 {
+    using System.Runtime.InteropServices;
+
+    [StructLayout(LayoutKind.Sequential)]
     public unsafe struct FT_Vector_
     {
-        public long x;
-        public long y;
+        public int x;
+        public int y;
     }
 }

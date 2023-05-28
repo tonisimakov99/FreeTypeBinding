@@ -1,14 +1,17 @@
 namespace FreeTypeBinding
 {
+    using System.Runtime.InteropServices;
+
+    [StructLayout(LayoutKind.Sequential)]
     public unsafe struct FT_Glyph_Metrics_
     {
-        public long width;
-        public long height;
-        public long horiBearingX;
-        public long horiBearingY;
-        public long horiAdvance;
-        public long vertBearingX;
-        public long vertBearingY;
-        public long vertAdvance;
+        public int width;
+        public int height;
+        public int horiBearingX;
+        public int horiBearingY;
+        public int horiAdvance;
+        public int vertBearingX;
+        public int vertBearingY;
+        public int vertAdvance;
     }
 }

@@ -16,12 +16,12 @@ namespace FreeTypeBinding.Generator
         private static Dictionary<PrimitiveType, string> primitiveTypes = new Dictionary<PrimitiveType, string>()
         {
             { PrimitiveType.Int,"int"},
-            { PrimitiveType.Long,"long"},
+            { PrimitiveType.Long,"int"},
             { PrimitiveType.Float,"float"},
             { PrimitiveType.Double,"double"},
             { PrimitiveType.Bool,"bool"},
             { PrimitiveType.String,"string"},
-            { PrimitiveType.ULong,"ulong" },
+            { PrimitiveType.ULong,"uint" },
             { PrimitiveType.UInt,"uint" },
             { PrimitiveType.Void,"void" },
             { PrimitiveType.UChar,"byte" },
@@ -74,14 +74,19 @@ namespace FreeTypeBinding.Generator
             classSyntax = classSyntax.AddModifiers(SyntaxFactory.Token(SyntaxKind.StaticKeyword));
 
 
-            var attribute = SyntaxFactory.Attribute(
+            var attributesArgsList = new SeparatedSyntaxList<AttributeArgumentSyntax>();
+            attributesArgsList = attributesArgsList.Add(
+                SyntaxFactory.AttributeArgument(
+                    SyntaxFactory.LiteralExpression(
+                        SyntaxKind.StringLiteralExpression,
+                            SyntaxFactory.Literal("freetype.dll"))));
+            attributesArgsList = attributesArgsList.Add(
+                SyntaxFactory.AttributeArgument(SyntaxFactory.ParseExpression("CallingConvention = CallingConvention.Cdecl")));
+
+
+            var dllImportAttribute = SyntaxFactory.Attribute(
                 SyntaxFactory.IdentifierName("DllImport"),
-                SyntaxFactory.AttributeArgumentList(
-                    new SeparatedSyntaxList<AttributeArgumentSyntax>().Add(
-                        SyntaxFactory.AttributeArgument(
-                            SyntaxFactory.LiteralExpression(
-                                SyntaxKind.StringLiteralExpression,
-                                SyntaxFactory.Literal("freetype.dll")))))
+                SyntaxFactory.AttributeArgumentList(attributesArgsList)
                 );
 
             var funcSyntaxTypes = new List<MethodDeclarationSyntax>();
@@ -98,7 +103,7 @@ namespace FreeTypeBinding.Generator
                         modifiers = modifiers.Add(SyntaxFactory.Token(SyntaxKind.ExternKeyword));
 
                         var attributes = new SyntaxList<AttributeListSyntax>();
-                        attributes = attributes.Add(SyntaxFactory.AttributeList(new SeparatedSyntaxList<AttributeSyntax>().Add(attribute)));
+                        attributes = attributes.Add(SyntaxFactory.AttributeList(new SeparatedSyntaxList<AttributeSyntax>().Add(dllImportAttribute)));
                         var parameters = new SeparatedSyntaxList<ParameterSyntax>();
 
                         if (_func.Name == "FT_Load_Glyph")
@@ -125,7 +130,7 @@ namespace FreeTypeBinding.Generator
                             modifiers,
                             returnTypeSyntax,
                             null,
-                            SyntaxFactory.Identifier(_func.Name.Replace("FT_","")),
+                            SyntaxFactory.Identifier(_func.Name),
                             null,
                             SyntaxFactory.ParameterList(parameters),
                             default,
@@ -199,6 +204,41 @@ namespace FreeTypeBinding.Generator
 
         private static Dictionary<string, Class> classes;
         private static Dictionary<string, Enumeration> enumerations;
+
+        private static void AddPreprocessedEnumeration(ASTContext context, string startsWith, string? notStartsWith = default)
+        {
+            if (!enumerations.ContainsKey(startsWith))
+            {
+                var definations = new Dictionary<string, string>();
+                foreach (var translationUnit in context.TranslationUnits)
+                {
+                    foreach (var _preprocessed in translationUnit.PreprocessedEntities)
+                    {
+                        var macroDefination = _preprocessed as MacroDefinition;
+                        if (macroDefination != default)
+                        {
+                            if (notStartsWith != default)
+                            {
+                                if (macroDefination.Name.StartsWith(startsWith) && !macroDefination.Name.StartsWith(notStartsWith))
+                                    definations.Add(macroDefination.Name, macroDefination.Expression.Replace("L", ""));
+                            }
+                            else
+                            {
+                                if (macroDefination.Name.StartsWith(startsWith))
+                                    definations.Add(macroDefination.Name, macroDefination.Expression.Replace("L",""));
+                            }
+                        }
+                    }
+                }
+
+                enumerations.Add(startsWith, new Enumeration()
+                {
+                    Name = startsWith,
+                    Type = new BuiltinType() { Type = PrimitiveType.Long },
+                    Items = definations.Select(t => new Enumeration.Item() { Name = t.Key, Expression = t.Value }).ToList()
+                });
+            }
+        }
         private static void RegisterType(ASTContext context, string typeName)
         {
             if (classes == default)
@@ -239,29 +279,10 @@ namespace FreeTypeBinding.Generator
                 }
             }
 
-            if (!enumerations.ContainsKey("FT_LOAD"))
-            {
-                var ftLoadDefinations = new Dictionary<string, string>();
-                foreach (var translationUnit in context.TranslationUnits)
-                {
-                    foreach (var _preprocessed in translationUnit.PreprocessedEntities)
-                    {
-                        var macroDefination = _preprocessed as MacroDefinition;
-                        if (macroDefination != default)
-                        {
-                            if (macroDefination.Name.StartsWith("FT_LOAD")&& !macroDefination.Name.StartsWith("FT_LOAD_TARGET"))
-                                ftLoadDefinations.Add(macroDefination.Name, macroDefination.Expression);
-                        }
-                    }
-                }
-
-                enumerations.Add("FT_LOAD", new Enumeration()
-                {
-                    Name = "FT_LOAD",
-                    Type = new BuiltinType() { Type = PrimitiveType.Long },
-                    Items = ftLoadDefinations.Select(t => new Enumeration.Item() { Name = t.Key, Expression = t.Value }).ToList()
-                });
-            }
+            AddPreprocessedEnumeration(context, "FT_LOAD", "FT_LOAD_TARGET");
+            AddPreprocessedEnumeration(context, "FT_FACE_FLAG");
+            AddPreprocessedEnumeration(context, "FT_LOAD_TARGET");
+            AddPreprocessedEnumeration(context, "FT_STYLE_FLAG");
 
             registeredTypes.Add(typeName);
 
@@ -271,10 +292,22 @@ namespace FreeTypeBinding.Generator
                 using (var fileWriter = new StreamWriter(File.OpenWrite($"{options.OutDir}/{_class.Name}.cs")))
                 {
                     var namespaceNameSyntax = SyntaxFactory.IdentifierName(options.Namespace);
-                    var root = SyntaxFactory.NamespaceDeclaration(namespaceNameSyntax);
+
+                    var rootSyntax = SyntaxFactory.NamespaceDeclaration(
+                        namespaceNameSyntax,
+                        default,
+                        new SyntaxList<UsingDirectiveSyntax>().Add(SyntaxFactory.UsingDirective(SyntaxFactory.IdentifierName("System.Runtime.InteropServices"))),
+                        default);
+                    var attribute = SyntaxFactory.Attribute(
+                                  SyntaxFactory.IdentifierName("StructLayout"),
+                                  SyntaxFactory.AttributeArgumentList(
+                                      new SeparatedSyntaxList<AttributeArgumentSyntax>().Add(
+                                          SyntaxFactory.AttributeArgument(SyntaxFactory.ParseExpression("LayoutKind.Sequential")))));
+
                     var _struct = SyntaxFactory.StructDeclaration(_class.Name);
                     _struct = _struct.AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword));
                     _struct = _struct.AddModifiers(SyntaxFactory.Token(SyntaxKind.UnsafeKeyword));
+                    _struct = _struct.AddAttributeLists(SyntaxFactory.AttributeList(new SeparatedSyntaxList<AttributeSyntax>().Add(attribute)));
                     foreach (var field in _class.Fields)
                     {
                         var typeSyntax = GetTypeSyntax(context, field.Type);
@@ -289,9 +322,9 @@ namespace FreeTypeBinding.Generator
                         _struct = _struct.AddMembers(fieldDeclaration);
                     }
 
-                    root = root.AddMembers(_struct);
+                    rootSyntax = rootSyntax.AddMembers(_struct);
 
-                    fileWriter.Write(root.NormalizeWhitespace().ToFullString());
+                    fileWriter.Write(rootSyntax.NormalizeWhitespace().ToFullString());
                 }
             }
             else if (enumerations.ContainsKey(typeName))
@@ -319,38 +352,8 @@ namespace FreeTypeBinding.Generator
 
                         var _enumMemberDeclaration = SyntaxFactory.EnumMemberDeclaration(item.Name);
                         _enumMemberDeclaration = _enumMemberDeclaration.WithEqualsValue(
-                            SyntaxFactory.EqualsValueClause( SyntaxFactory.ParseExpression(parseValue)));
+                            SyntaxFactory.EqualsValueClause(SyntaxFactory.ParseExpression(parseValue)));
                         _enumDeclaration = _enumDeclaration.AddMembers(_enumMemberDeclaration);
-
-                        //if (type.Type == PrimitiveType.Int)
-                        //{
-                        //    var _enumMemberDeclaration = SyntaxFactory.EnumMemberDeclaration(item.Name);
-                        //    _enumMemberDeclaration = _enumMemberDeclaration.WithEqualsValue(
-                        //        SyntaxFactory.EqualsValueClause(
-                        //            SyntaxFactory.LiteralExpression(
-                        //                SyntaxKind.StringLiteralExpression,
-                        //                SyntaxFactory.Literal((int)item.Value))));
-                        //    _enumDeclaration = _enumDeclaration.AddMembers(_enumMemberDeclaration);
-                        //}
-                        //else if (type.Type == PrimitiveType.Long)
-                        //{
-                        //    if (!string.IsNullOrEmpty(item.Expression))
-                        //    {
-
-                        //    }
-                        //    else
-
-
-                        //        var _enumMemberDeclaration = SyntaxFactory.EnumMemberDeclaration(item.Name);
-                        //    _enumMemberDeclaration = _enumMemberDeclaration.WithEqualsValue(
-                        //        SyntaxFactory.EqualsValueClause(
-                        //            SyntaxFactory.LiteralExpression(
-                        //                SyntaxKind.StringLiteralExpression,
-                        //                SyntaxFactory.Literal((int)item.Value))));
-                        //    _enumDeclaration = _enumDeclaration.AddMembers(_enumMemberDeclaration);
-                        //}
-                        //else
-                        //    throw new System.Exception("not supported type");
                     }
 
                     root = root.AddMembers(_enumDeclaration);

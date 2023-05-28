@@ -1,12 +1,15 @@
 namespace FreeTypeBinding
 {
+    using System.Runtime.InteropServices;
+
+    [StructLayout(LayoutKind.Sequential)]
     public unsafe struct FT_FaceRec_
     {
-        public long num_faces;
-        public long face_index;
-        public long face_flags;
-        public long style_flags;
-        public long num_glyphs;
+        public int num_faces;
+        public int face_index;
+        public int face_flags;
+        public int style_flags;
+        public int num_glyphs;
         public byte* family_name;
         public byte* style_name;
         public int num_fixed_sizes;
