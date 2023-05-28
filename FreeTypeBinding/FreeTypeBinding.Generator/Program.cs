@@ -68,7 +68,7 @@ namespace FreeTypeBinding.Generator
                 new SyntaxList<UsingDirectiveSyntax>().Add(SyntaxFactory.UsingDirective(SyntaxFactory.IdentifierName("System.Runtime.InteropServices"))),
                 default);
 
-            var classSyntax = SyntaxFactory.ClassDeclaration("FreeType");
+            var classSyntax = SyntaxFactory.ClassDeclaration("FT");
             classSyntax = classSyntax.AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword));
             classSyntax = classSyntax.AddModifiers(SyntaxFactory.Token(SyntaxKind.UnsafeKeyword));
             classSyntax = classSyntax.AddModifiers(SyntaxFactory.Token(SyntaxKind.StaticKeyword));
@@ -100,8 +100,24 @@ namespace FreeTypeBinding.Generator
                         var attributes = new SyntaxList<AttributeListSyntax>();
                         attributes = attributes.Add(SyntaxFactory.AttributeList(new SeparatedSyntaxList<AttributeSyntax>().Add(attribute)));
                         var parameters = new SeparatedSyntaxList<ParameterSyntax>();
-                        foreach (var parameter in _func.Parameters)
-                            parameters = parameters.Add(SyntaxFactory.Parameter(default, default, GetTypeSyntax(context, parameter.Type), SyntaxFactory.Identifier(parameter.Name), default));
+
+                        if (_func.Name == "FT_Load_Glyph")
+                        {
+                            foreach (var parameter in _func.Parameters.Take(_func.Parameters.Count - 1))
+                                parameters = parameters.Add(SyntaxFactory.Parameter(default, default, GetTypeSyntax(context, parameter.Type), SyntaxFactory.Identifier(parameter.Name), default));
+                            parameters = parameters.Add(SyntaxFactory.Parameter(default, default, GetTypeSyntax(context, new TagType()
+                            {
+                                Declaration = new Enumeration()
+                                {
+                                    Name = "FT_LOAD"
+                                }
+                            }), SyntaxFactory.Identifier("load_flags"), default));
+                        }
+                        else
+                        {
+                            foreach (var parameter in _func.Parameters)
+                                parameters = parameters.Add(SyntaxFactory.Parameter(default, default, GetTypeSyntax(context, parameter.Type), SyntaxFactory.Identifier(parameter.Name), default));
+                        }
 
                         var returnTypeSyntax = GetTypeSyntax(context, _func.ReturnType.Type);
                         var funcSyntax = SyntaxFactory.MethodDeclaration(
@@ -109,7 +125,7 @@ namespace FreeTypeBinding.Generator
                             modifiers,
                             returnTypeSyntax,
                             null,
-                            SyntaxFactory.Identifier(_func.Name),
+                            SyntaxFactory.Identifier(_func.Name.Replace("FT_","")),
                             null,
                             SyntaxFactory.ParameterList(parameters),
                             default,
@@ -223,6 +239,30 @@ namespace FreeTypeBinding.Generator
                 }
             }
 
+            if (!enumerations.ContainsKey("FT_LOAD"))
+            {
+                var ftLoadDefinations = new Dictionary<string, string>();
+                foreach (var translationUnit in context.TranslationUnits)
+                {
+                    foreach (var _preprocessed in translationUnit.PreprocessedEntities)
+                    {
+                        var macroDefination = _preprocessed as MacroDefinition;
+                        if (macroDefination != default)
+                        {
+                            if (macroDefination.Name.StartsWith("FT_LOAD")&& !macroDefination.Name.StartsWith("FT_LOAD_TARGET"))
+                                ftLoadDefinations.Add(macroDefination.Name, macroDefination.Expression);
+                        }
+                    }
+                }
+
+                enumerations.Add("FT_LOAD", new Enumeration()
+                {
+                    Name = "FT_LOAD",
+                    Type = new BuiltinType() { Type = PrimitiveType.Long },
+                    Items = ftLoadDefinations.Select(t => new Enumeration.Item() { Name = t.Key, Expression = t.Value }).ToList()
+                });
+            }
+
             registeredTypes.Add(typeName);
 
             if (classes.ContainsKey(typeName))
@@ -271,18 +311,46 @@ namespace FreeTypeBinding.Generator
 
                     foreach (var item in _enum.Items)
                     {
-                        if (type.Type == PrimitiveType.Int)
-                        {
-                            var _enumMemberDeclaration = SyntaxFactory.EnumMemberDeclaration(item.Name);
-                            _enumMemberDeclaration = _enumMemberDeclaration.WithEqualsValue(
-                                SyntaxFactory.EqualsValueClause(
-                                    SyntaxFactory.LiteralExpression(
-                                        SyntaxKind.StringLiteralExpression,
-                                        SyntaxFactory.Literal((int)item.Value))));
-                            _enumDeclaration = _enumDeclaration.AddMembers(_enumMemberDeclaration);
-                        }
+                        var parseValue = "";
+                        if (_enum.Name == "FT_LOAD")
+                            parseValue = item.Expression;
                         else
-                            throw new System.Exception("not supported type");
+                            parseValue = item.Value.ToString();
+
+                        var _enumMemberDeclaration = SyntaxFactory.EnumMemberDeclaration(item.Name);
+                        _enumMemberDeclaration = _enumMemberDeclaration.WithEqualsValue(
+                            SyntaxFactory.EqualsValueClause( SyntaxFactory.ParseExpression(parseValue)));
+                        _enumDeclaration = _enumDeclaration.AddMembers(_enumMemberDeclaration);
+
+                        //if (type.Type == PrimitiveType.Int)
+                        //{
+                        //    var _enumMemberDeclaration = SyntaxFactory.EnumMemberDeclaration(item.Name);
+                        //    _enumMemberDeclaration = _enumMemberDeclaration.WithEqualsValue(
+                        //        SyntaxFactory.EqualsValueClause(
+                        //            SyntaxFactory.LiteralExpression(
+                        //                SyntaxKind.StringLiteralExpression,
+                        //                SyntaxFactory.Literal((int)item.Value))));
+                        //    _enumDeclaration = _enumDeclaration.AddMembers(_enumMemberDeclaration);
+                        //}
+                        //else if (type.Type == PrimitiveType.Long)
+                        //{
+                        //    if (!string.IsNullOrEmpty(item.Expression))
+                        //    {
+
+                        //    }
+                        //    else
+
+
+                        //        var _enumMemberDeclaration = SyntaxFactory.EnumMemberDeclaration(item.Name);
+                        //    _enumMemberDeclaration = _enumMemberDeclaration.WithEqualsValue(
+                        //        SyntaxFactory.EqualsValueClause(
+                        //            SyntaxFactory.LiteralExpression(
+                        //                SyntaxKind.StringLiteralExpression,
+                        //                SyntaxFactory.Literal((int)item.Value))));
+                        //    _enumDeclaration = _enumDeclaration.AddMembers(_enumMemberDeclaration);
+                        //}
+                        //else
+                        //    throw new System.Exception("not supported type");
                     }
 
                     root = root.AddMembers(_enumDeclaration);
