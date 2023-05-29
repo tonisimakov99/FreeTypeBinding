@@ -5,6 +5,12 @@
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Description>FreeType bindings for dotnet</Description>
+    <PackageProjectUrl>https://github.com/tonisimakov99/FreeTypeBinding</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/tonisimakov99/FreeTypeBinding</RepositoryUrl>
+    <PackageReleaseNotes>simple bindings, common functions available</PackageReleaseNotes>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageTags>FreeType;Bindings;freetype</PackageTags>
   </PropertyGroup>
 
 </Project>
