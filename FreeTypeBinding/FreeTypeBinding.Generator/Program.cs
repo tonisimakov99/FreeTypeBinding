@@ -4,7 +4,6 @@ using CppSharp.AST;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Std.Vector;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -60,6 +59,8 @@ namespace FreeTypeBinding.Generator
             }
             var context = ClangParser.ConvertASTContext(parserOptions.ASTContext);
 
+            InitTypes(context);
+
             var namespaceNameSyntax = SyntaxFactory.IdentifierName(options.Namespace);
 
             var rootSyntax = SyntaxFactory.NamespaceDeclaration(
@@ -106,22 +107,21 @@ namespace FreeTypeBinding.Generator
                         attributes = attributes.Add(SyntaxFactory.AttributeList(new SeparatedSyntaxList<AttributeSyntax>().Add(dllImportAttribute)));
                         var parameters = new SeparatedSyntaxList<ParameterSyntax>();
 
-                        if (_func.Name == "FT_Load_Glyph")
+                        foreach (var parameter in _func.Parameters)
                         {
-                            foreach (var parameter in _func.Parameters.Take(_func.Parameters.Count - 1))
-                                parameters = parameters.Add(SyntaxFactory.Parameter(default, default, GetTypeSyntax(context, parameter.Type), SyntaxFactory.Identifier(parameter.Name), default));
-                            parameters = parameters.Add(SyntaxFactory.Parameter(default, default, GetTypeSyntax(context, new TagType()
-                            {
-                                Declaration = new Enumeration()
+                            TypeSyntax paramType;
+                            if (predefinedEnumerations.ContainsKey(parameter.Name))
+                                paramType = GetTypeSyntax(context, new TagType()
                                 {
-                                    Name = "FT_LOAD"
-                                }
-                            }), SyntaxFactory.Identifier("load_flags"), default));
-                        }
-                        else
-                        {
-                            foreach (var parameter in _func.Parameters)
-                                parameters = parameters.Add(SyntaxFactory.Parameter(default, default, GetTypeSyntax(context, parameter.Type), SyntaxFactory.Identifier(parameter.Name), default));
+                                    Declaration = new Enumeration()
+                                    {
+                                        Name = predefinedEnumerations[parameter.Name].name,
+                                        Items = predefinedEnumerations[parameter.Name]._enum.Items
+                                    }
+                                });
+                            else
+                                paramType = GetTypeSyntax(context, parameter.Type);
+                            parameters = parameters.Add(SyntaxFactory.Parameter(default, default, paramType, SyntaxFactory.Identifier(parameter.Name), default));
                         }
 
                         var returnTypeSyntax = GetTypeSyntax(context, _func.ReturnType.Type);
@@ -204,10 +204,10 @@ namespace FreeTypeBinding.Generator
 
         private static Dictionary<string, Class> classes;
         private static Dictionary<string, Enumeration> enumerations;
-
-        private static void AddPreprocessedEnumeration(ASTContext context, string startsWith, string? notStartsWith = default)
+        private static Dictionary<string, (string name, Enumeration _enum)> predefinedEnumerations = new Dictionary<string, (string name, Enumeration _enum)>();
+        private static void AddPreprocessedEnumeration(ASTContext context, string varName, string startsWith, string? notStartsWith = default)
         {
-            if (!enumerations.ContainsKey(startsWith))
+            if (!predefinedEnumerations.ContainsKey(startsWith))
             {
                 var definations = new Dictionary<string, string>();
                 foreach (var translationUnit in context.TranslationUnits)
@@ -225,21 +225,23 @@ namespace FreeTypeBinding.Generator
                             else
                             {
                                 if (macroDefination.Name.StartsWith(startsWith))
-                                    definations.Add(macroDefination.Name, macroDefination.Expression.Replace("L",""));
+                                    definations.Add(macroDefination.Name, macroDefination.Expression.Replace("L", ""));
                             }
                         }
                     }
                 }
 
-                enumerations.Add(startsWith, new Enumeration()
+                predefinedEnumerations.Add(varName, (startsWith, new Enumeration()
                 {
                     Name = startsWith,
                     Type = new BuiltinType() { Type = PrimitiveType.Long },
                     Items = definations.Select(t => new Enumeration.Item() { Name = t.Key, Expression = t.Value }).ToList()
-                });
+                }));
             }
         }
-        private static void RegisterType(ASTContext context, string typeName)
+
+
+        private static void InitTypes(ASTContext context)
         {
             if (classes == default)
             {
@@ -279,11 +281,12 @@ namespace FreeTypeBinding.Generator
                 }
             }
 
-            AddPreprocessedEnumeration(context, "FT_LOAD", "FT_LOAD_TARGET");
-            AddPreprocessedEnumeration(context, "FT_FACE_FLAG");
-            AddPreprocessedEnumeration(context, "FT_LOAD_TARGET");
-            AddPreprocessedEnumeration(context, "FT_STYLE_FLAG");
-
+            AddPreprocessedEnumeration(context, "load_flags", "FT_LOAD", "FT_LOAD_TARGET");
+            AddPreprocessedEnumeration(context, "face_flags", "FT_FACE_FLAG");
+            AddPreprocessedEnumeration(context, "style_flags", "FT_STYLE_FLAG");
+        }
+        private static void RegisterType(ASTContext context, string typeName)
+        {
             registeredTypes.Add(typeName);
 
             if (classes.ContainsKey(typeName))
@@ -310,7 +313,20 @@ namespace FreeTypeBinding.Generator
                     _struct = _struct.AddAttributeLists(SyntaxFactory.AttributeList(new SeparatedSyntaxList<AttributeSyntax>().Add(attribute)));
                     foreach (var field in _class.Fields)
                     {
-                        var typeSyntax = GetTypeSyntax(context, field.Type);
+                        TypeSyntax typeSyntax;
+                        if (predefinedEnumerations.ContainsKey(field.Name))
+                        {
+                            typeSyntax = GetTypeSyntax(context, new TagType()
+                            {
+                                Declaration = new Enumeration()
+                                {
+                                    Name = predefinedEnumerations[field.Name]._enum.Name,
+                                    Items = predefinedEnumerations[field.Name]._enum.Items
+                                }
+                            });
+                        }
+                        else
+                            typeSyntax = GetTypeSyntax(context, field.Type);
                         var variablesList = new SeparatedSyntaxList<VariableDeclaratorSyntax>();
                         var name = field.Name;
                         if (name == "internal" || name == "base" || name == "params")
@@ -344,15 +360,37 @@ namespace FreeTypeBinding.Generator
 
                     foreach (var item in _enum.Items)
                     {
-                        var parseValue = "";
-                        if (_enum.Name == "FT_LOAD")
-                            parseValue = item.Expression;
-                        else
-                            parseValue = item.Value.ToString();
-
                         var _enumMemberDeclaration = SyntaxFactory.EnumMemberDeclaration(item.Name);
                         _enumMemberDeclaration = _enumMemberDeclaration.WithEqualsValue(
-                            SyntaxFactory.EqualsValueClause(SyntaxFactory.ParseExpression(parseValue)));
+                            SyntaxFactory.EqualsValueClause(SyntaxFactory.ParseExpression(item.Value.ToString())));
+                        _enumDeclaration = _enumDeclaration.AddMembers(_enumMemberDeclaration);
+                    }
+
+                    root = root.AddMembers(_enumDeclaration);
+
+                    fileWriter.Write(root.NormalizeWhitespace().ToFullString());
+                }
+            }
+            else if (predefinedEnumerations.Values.Select(t => t._enum).SingleOrDefault(t => t.Name == typeName) != null)
+            {
+                var _enum = predefinedEnumerations.Values.Select(t => t._enum).SingleOrDefault(t => t.Name == typeName);
+                using (var fileWriter = new StreamWriter(File.OpenWrite($"{options.OutDir}/{_enum.Name}.cs")))
+                {
+                    var namespaceNameSyntax = SyntaxFactory.IdentifierName(options.Namespace);
+                    var root = SyntaxFactory.NamespaceDeclaration(namespaceNameSyntax);
+                    var type = _enum.Type as BuiltinType;
+
+                    var _enumDeclaration = SyntaxFactory.EnumDeclaration(_enum.Name);
+                    _enumDeclaration = _enumDeclaration.AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword));
+                    _enumDeclaration = _enumDeclaration.WithBaseList(
+                        SyntaxFactory.BaseList(
+                            new SeparatedSyntaxList<BaseTypeSyntax>().Add(SyntaxFactory.SimpleBaseType(GetTypeSyntax(context, type)))));
+
+                    foreach (var item in _enum.Items)
+                    {
+                        var _enumMemberDeclaration = SyntaxFactory.EnumMemberDeclaration(item.Name);
+                        _enumMemberDeclaration = _enumMemberDeclaration.WithEqualsValue(
+                            SyntaxFactory.EqualsValueClause(SyntaxFactory.ParseExpression(item.Expression)));
                         _enumDeclaration = _enumDeclaration.AddMembers(_enumMemberDeclaration);
                     }
 

@@ -7,8 +7,8 @@ namespace FreeTypeBinding
     {
         public int num_faces;
         public int face_index;
-        public int face_flags;
-        public int style_flags;
+        public FT_FACE_FLAG face_flags;
+        public FT_STYLE_FLAG style_flags;
         public int num_glyphs;
         public byte* family_name;
         public byte* style_name;

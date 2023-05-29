@@ -33,7 +33,7 @@ namespace FreeTypeBinding
         [DllImport("freetype.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern FT_Error FT_Load_Glyph(FT_FaceRec_* face, uint glyph_index, FT_LOAD load_flags);
         [DllImport("freetype.dll", CallingConvention = CallingConvention.Cdecl)]
-        public static extern FT_Error FT_Load_Char(FT_FaceRec_* face, uint char_code, int load_flags);
+        public static extern FT_Error FT_Load_Char(FT_FaceRec_* face, uint char_code, FT_LOAD load_flags);
         [DllImport("freetype.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern void FT_Set_Transform(FT_FaceRec_* face, FT_Matrix_* matrix, FT_Vector_* delta);
         [DllImport("freetype.dll", CallingConvention = CallingConvention.Cdecl)]
