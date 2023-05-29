@@ -10,7 +10,7 @@ namespace FreeTypeBinding
         public int pitch;
         public byte* buffer;
         public ushort num_grays;
-        public byte pixel_mode;
+        public FT_Pixel_Mode_ pixel_mode;
         public byte palette_mode;
         public void* palette;
     }

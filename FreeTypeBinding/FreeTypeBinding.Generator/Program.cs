@@ -31,6 +31,14 @@ namespace FreeTypeBinding.Generator
             { PrimitiveType.ULongLong,"ulong" },
             { PrimitiveType.LongLong,"long" }
         };
+
+        private static Dictionary<string, Class> classes= new Dictionary<string, Class>();
+        private static Dictionary<string, Enumeration> enumerations = new Dictionary<string, Enumeration>();
+        private static Dictionary<string, BuiltinType> enumerationBaseTypeOverrides = new Dictionary<string, BuiltinType>();
+        private static Dictionary<string, Enumeration> predefinedEnumerations = new Dictionary<string, Enumeration>();
+        private static Dictionary<string, Enumeration> typeOverrides = new Dictionary<string, Enumeration>();
+
+
         private static Options options;
         public static int Main(string[] args)
         {
@@ -110,14 +118,10 @@ namespace FreeTypeBinding.Generator
                         foreach (var parameter in _func.Parameters)
                         {
                             TypeSyntax paramType;
-                            if (predefinedEnumerations.ContainsKey(parameter.Name))
+                            if (typeOverrides.ContainsKey(parameter.Name))
                                 paramType = GetTypeSyntax(context, new TagType()
                                 {
-                                    Declaration = new Enumeration()
-                                    {
-                                        Name = predefinedEnumerations[parameter.Name].name,
-                                        Items = predefinedEnumerations[parameter.Name]._enum.Items
-                                    }
+                                    Declaration = typeOverrides[parameter.Name]
                                 });
                             else
                                 paramType = GetTypeSyntax(context, parameter.Type);
@@ -202,10 +206,60 @@ namespace FreeTypeBinding.Generator
             throw new System.Exception("type not handled");
         }
 
-        private static Dictionary<string, Class> classes;
-        private static Dictionary<string, Enumeration> enumerations;
-        private static Dictionary<string, (string name, Enumeration _enum)> predefinedEnumerations = new Dictionary<string, (string name, Enumeration _enum)>();
-        private static void AddPreprocessedEnumeration(ASTContext context, string varName, string startsWith, string? notStartsWith = default)
+        private static void InitTypes(ASTContext context)
+        {
+            foreach (var translationUnit in context.TranslationUnits)
+            {
+                foreach (var _class in translationUnit.Classes)
+                {
+                    classes.Add(_class.Name, _class);
+                }
+            }
+
+            enumerationBaseTypeOverrides.Add("FT_Pixel_Mode_", new BuiltinType() { Type = PrimitiveType.UChar });
+
+            var errCount = 0;
+            foreach (var translationUnit in context.TranslationUnits)
+            {
+                foreach (var _enum in translationUnit.Enums)
+                {
+                    if (_enum.Name == "")
+                    {
+                        if (errCount == 0)
+                            enumerations.Add($"", _enum);
+                        else
+                        {
+                            _enum.Name = "FT_Error";
+                            enumerations.Add("FT_Error", _enum);
+                        }
+                        errCount++;
+                    }
+                    else
+                    {
+                        if(enumerationBaseTypeOverrides.ContainsKey(_enum.Name))
+                        {
+                            _enum.Type = enumerationBaseTypeOverrides[_enum.Name];
+                        }
+                        enumerations.Add(_enum.Name, _enum);
+                    }
+                }
+            }
+
+            //AddPreprocessedEnumeration(context, "load_flags", "FT_LOAD", "FT_LOAD_TARGET");
+            //AddPreprocessedEnumeration(context, "face_flags", "FT_FACE_FLAG");
+            //AddPreprocessedEnumeration(context, "style_flags", "FT_STYLE_FLAG");
+
+            AddPreprocessedEnumeration(context, "FT_LOAD", "FT_LOAD_TARGET");
+            AddPreprocessedEnumeration(context, "FT_FACE_FLAG");
+            AddPreprocessedEnumeration(context, "FT_STYLE_FLAG");
+
+            typeOverrides.Add("load_flags", predefinedEnumerations["FT_LOAD"]);
+            typeOverrides.Add("face_flags", predefinedEnumerations["FT_FACE_FLAG"]);
+            typeOverrides.Add("style_flags", predefinedEnumerations["FT_STYLE_FLAG"]);
+            typeOverrides.Add("pixel_mode", enumerations["FT_Pixel_Mode_"]);
+        }
+
+        private static void AddPreprocessedEnumeration(ASTContext context, string startsWith, string? notStartsWith = default)
         {
             if (!predefinedEnumerations.ContainsKey(startsWith))
             {
@@ -231,60 +285,15 @@ namespace FreeTypeBinding.Generator
                     }
                 }
 
-                predefinedEnumerations.Add(varName, (startsWith, new Enumeration()
+                predefinedEnumerations.Add(startsWith, new Enumeration()
                 {
                     Name = startsWith,
                     Type = new BuiltinType() { Type = PrimitiveType.Long },
                     Items = definations.Select(t => new Enumeration.Item() { Name = t.Key, Expression = t.Value }).ToList()
-                }));
+                });
             }
         }
 
-
-        private static void InitTypes(ASTContext context)
-        {
-            if (classes == default)
-            {
-                classes = new Dictionary<string, Class>();
-
-                foreach (var translationUnit in context.TranslationUnits)
-                {
-                    foreach (var _class in translationUnit.Classes)
-                    {
-                        classes.Add(_class.Name, _class);
-                    }
-                }
-            }
-
-            if (enumerations == default)
-            {
-                enumerations = new Dictionary<string, Enumeration>();
-                var errCount = 0;
-                foreach (var translationUnit in context.TranslationUnits)
-                {
-                    foreach (var _enum in translationUnit.Enums)
-                    {
-                        if (_enum.Name == "")
-                        {
-                            if (errCount == 0)
-                                enumerations.Add($"", _enum);
-                            else
-                            {
-                                _enum.Name = "FT_Error";
-                                enumerations.Add("FT_Error", _enum);
-                            }
-                            errCount++;
-                        }
-                        else
-                            enumerations.Add(_enum.Name, _enum);
-                    }
-                }
-            }
-
-            AddPreprocessedEnumeration(context, "load_flags", "FT_LOAD", "FT_LOAD_TARGET");
-            AddPreprocessedEnumeration(context, "face_flags", "FT_FACE_FLAG");
-            AddPreprocessedEnumeration(context, "style_flags", "FT_STYLE_FLAG");
-        }
         private static void RegisterType(ASTContext context, string typeName)
         {
             registeredTypes.Add(typeName);
@@ -314,15 +323,11 @@ namespace FreeTypeBinding.Generator
                     foreach (var field in _class.Fields)
                     {
                         TypeSyntax typeSyntax;
-                        if (predefinedEnumerations.ContainsKey(field.Name))
+                        if (typeOverrides.ContainsKey(field.Name))
                         {
                             typeSyntax = GetTypeSyntax(context, new TagType()
                             {
-                                Declaration = new Enumeration()
-                                {
-                                    Name = predefinedEnumerations[field.Name]._enum.Name,
-                                    Items = predefinedEnumerations[field.Name]._enum.Items
-                                }
+                                Declaration = typeOverrides[field.Name]
                             });
                         }
                         else
@@ -371,9 +376,9 @@ namespace FreeTypeBinding.Generator
                     fileWriter.Write(root.NormalizeWhitespace().ToFullString());
                 }
             }
-            else if (predefinedEnumerations.Values.Select(t => t._enum).SingleOrDefault(t => t.Name == typeName) != null)
+            else if (predefinedEnumerations.ContainsKey(typeName))
             {
-                var _enum = predefinedEnumerations.Values.Select(t => t._enum).SingleOrDefault(t => t.Name == typeName);
+                var _enum = predefinedEnumerations[typeName];
                 using (var fileWriter = new StreamWriter(File.OpenWrite($"{options.OutDir}/{_enum.Name}.cs")))
                 {
                     var namespaceNameSyntax = SyntaxFactory.IdentifierName(options.Namespace);
