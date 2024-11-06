@@ -1,16 +1,17 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFrameworks>net6.0;net8.0</TargetFrameworks>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Description>FreeType bindings for dotnet</Description>
     <PackageProjectUrl>https://github.com/tonisimakov99/FreeTypeBinding</PackageProjectUrl>
     <RepositoryUrl>https://github.com/tonisimakov99/FreeTypeBinding</RepositoryUrl>
-    <PackageReleaseNotes>simple bindings, common functions available</PackageReleaseNotes>
+    <PackageReleaseNotes>update to net8.0</PackageReleaseNotes>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageTags>FreeType;Bindings;freetype</PackageTags>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
 </Project>
