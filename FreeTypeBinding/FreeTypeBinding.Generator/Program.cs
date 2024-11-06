@@ -88,7 +88,7 @@ namespace FreeTypeBinding.Generator
                 SyntaxFactory.AttributeArgument(
                     SyntaxFactory.LiteralExpression(
                         SyntaxKind.StringLiteralExpression,
-                            SyntaxFactory.Literal("freetype.dll"))));
+                            SyntaxFactory.Literal("runtimes/win-x64/freetype.dll"))));
             attributesArgsList = attributesArgsList.Add(
                 SyntaxFactory.AttributeArgument(SyntaxFactory.ParseExpression("CallingConvention = CallingConvention.Cdecl")));
 
