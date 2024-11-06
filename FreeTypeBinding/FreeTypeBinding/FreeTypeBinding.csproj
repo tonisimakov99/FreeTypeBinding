@@ -8,10 +8,14 @@
     <Description>FreeType bindings for dotnet</Description>
     <PackageProjectUrl>https://github.com/tonisimakov99/FreeTypeBinding</PackageProjectUrl>
     <RepositoryUrl>https://github.com/tonisimakov99/FreeTypeBinding</RepositoryUrl>
-    <PackageReleaseNotes>update to net8.0</PackageReleaseNotes>
+    <PackageReleaseNotes>add freetype.dll</PackageReleaseNotes>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageTags>FreeType;Bindings;freetype</PackageTags>
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FreeTypeBinding.Native\FreeTypeBinding.Native.csproj" />
+  </ItemGroup>
 
 </Project>

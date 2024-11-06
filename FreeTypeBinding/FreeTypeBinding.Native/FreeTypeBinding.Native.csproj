@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>net6.0;net8.0</TargetFrameworks>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<PackageReleaseNotes>freetype.dll include</PackageReleaseNotes>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<PackageTags>FreeType;Bindings;freetype</PackageTags>
+		<PackageProjectUrl>https://github.com/tonisimakov99/FreeTypeBinding</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/tonisimakov99/FreeTypeBinding</RepositoryUrl>
+		<Version>1.0.0</Version>
+		<IncludeBuildOutput>false</IncludeBuildOutput>
+		<IncludeContentInPack>true</IncludeContentInPack>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Content Include="build\net6.0\FreeTypeBinding.Native.targets" PackagePath="build\net6.0\FreeTypeBinding.Native.targets" />
+		<Content Include="buildTransitive\net6.0\FreeTypeBinding.Native.targets" PackagePath="buildTransitive\net6.0\FreeTypeBinding.Native.targets" />
+		<Content Include="runtimes\win-x64\freetype.dll" PackagePath="runtimes\win-x64\freetype.dll" />
+
+		<Content Include="build\net8.0\FreeTypeBinding.Native.targets" PackagePath="build\net8.0\FreeTypeBinding.Native.targets" />
+		<Content Include="buildTransitive\net8.0\FreeTypeBinding.Native.targets" PackagePath="buildTransitive\net8.0\FreeTypeBinding.Native.targets" />
+		<Content Include="runtimes\win-x64\freetype.dll" PackagePath="runtimes\win-x64\freetype.dll" />
+	</ItemGroup>
+
+</Project>
