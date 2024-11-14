@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FreeTypeBinding.Generator",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FreeTypeBinding.Demo", "FreeTypeBinding.Demo\FreeTypeBinding.Demo.csproj", "{18B830D5-3462-4329-B89A-1462B42A40AA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FreeTypeBinding.Native", "FreeTypeBinding.Native\FreeTypeBinding.Native.csproj", "{3717F33A-7CF0-4ECB-9F38-0D4757FFEDE9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FreeTypeBinding.Native", "FreeTypeBinding.Native\FreeTypeBinding.Native.csproj", "{3717F33A-7CF0-4ECB-9F38-0D4757FFEDE9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BindingGenerator", "..\..\..\source\repos\BindingGenerator\BindingGenerator\BindingGenerator.csproj", "{FCDE1FC4-F110-45CC-9FAF-4C83022C4071}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{3717F33A-7CF0-4ECB-9F38-0D4757FFEDE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3717F33A-7CF0-4ECB-9F38-0D4757FFEDE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3717F33A-7CF0-4ECB-9F38-0D4757FFEDE9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FCDE1FC4-F110-45CC-9FAF-4C83022C4071}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCDE1FC4-F110-45CC-9FAF-4C83022C4071}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FCDE1FC4-F110-45CC-9FAF-4C83022C4071}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FCDE1FC4-F110-45CC-9FAF-4C83022C4071}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

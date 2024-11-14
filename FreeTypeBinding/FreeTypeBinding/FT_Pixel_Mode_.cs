@@ -1,6 +1,6 @@
 namespace FreeTypeBinding
 {
-    public enum FT_Pixel_Mode_ : byte
+    public enum FT_Pixel_Mode_ : int
     {
         FT_PIXEL_MODE_NONE = 0,
         FT_PIXEL_MODE_MONO = 1,

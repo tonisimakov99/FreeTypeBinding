@@ -1,7 +1,7 @@
+using System.Runtime.InteropServices;
+
 namespace FreeTypeBinding
 {
-    using System.Runtime.InteropServices;
-
     public unsafe static class FT
     {
         [DllImport("runtimes/win-x64/freetype.dll", CallingConvention = CallingConvention.Cdecl)]

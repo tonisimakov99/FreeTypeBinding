@@ -1,27 +1,28 @@
 namespace FreeTypeBinding
 {
-    public enum FT_LOAD : int
+    public enum FT_LOAD : long
     {
-        FT_LOAD_DEFAULT = 0x0,
-        FT_LOAD_NO_SCALE = (1 << 0),
-        FT_LOAD_NO_HINTING = (1 << 1),
-        FT_LOAD_RENDER = (1 << 2),
-        FT_LOAD_NO_BITMAP = (1 << 3),
-        FT_LOAD_VERTICAL_LAYOUT = (1 << 4),
-        FT_LOAD_FORCE_AUTOHINT = (1 << 5),
-        FT_LOAD_CROP_BITMAP = (1 << 6),
-        FT_LOAD_PEDANTIC = (1 << 7),
-        FT_LOAD_IGNORE_GLOBAL_ADVANCE_WIDTH = (1 << 9),
-        FT_LOAD_NO_RECURSE = (1 << 10),
-        FT_LOAD_IGNORE_TRANSFORM = (1 << 11),
-        FT_LOAD_MONOCHROME = (1 << 12),
-        FT_LOAD_LINEAR_DESIGN = (1 << 13),
-        FT_LOAD_SBITS_ONLY = (1 << 14),
-        FT_LOAD_NO_AUTOHINT = (1 << 15),
-        FT_LOAD_COLOR = (1 << 20),
-        FT_LOAD_COMPUTE_METRICS = (1 << 21),
-        FT_LOAD_BITMAP_METRICS_ONLY = (1 << 22),
-        FT_LOAD_NO_SVG = (1 << 24),
-        FT_LOAD_ADVANCE_ONLY = (1 << 8),
-        FT_LOAD_SVG_ONLY = (1 << 23)}
+        FT_LOAD_DEFAULT = 0,
+        FT_LOAD_NO_SCALE = 1,
+        FT_LOAD_NO_HINTING = 2,
+        FT_LOAD_RENDER = 4,
+        FT_LOAD_NO_BITMAP = 8,
+        FT_LOAD_VERTICAL_LAYOUT = 16,
+        FT_LOAD_FORCE_AUTOHINT = 32,
+        FT_LOAD_CROP_BITMAP = 64,
+        FT_LOAD_PEDANTIC = 128,
+        FT_LOAD_IGNORE_GLOBAL_ADVANCE_WIDTH = 512,
+        FT_LOAD_NO_RECURSE = 1024,
+        FT_LOAD_IGNORE_TRANSFORM = 2048,
+        FT_LOAD_MONOCHROME = 4096,
+        FT_LOAD_LINEAR_DESIGN = 8192,
+        FT_LOAD_SBITS_ONLY = 16384,
+        FT_LOAD_NO_AUTOHINT = 32768,
+        FT_LOAD_COLOR = 1048576,
+        FT_LOAD_COMPUTE_METRICS = 2097152,
+        FT_LOAD_BITMAP_METRICS_ONLY = 4194304,
+        FT_LOAD_NO_SVG = 16777216,
+        FT_LOAD_ADVANCE_ONLY = 256,
+        FT_LOAD_SVG_ONLY = 8388608
+    }
 }
