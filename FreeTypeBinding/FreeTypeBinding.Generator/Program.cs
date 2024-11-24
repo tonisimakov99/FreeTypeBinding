@@ -27,16 +27,30 @@ namespace FreeTypeBinding.Generator
 
             BindingGenerator.Generator.Generate(
                 new[] { options.IncludePath },
-                options.FilePath,
+                new[] {
+                    new LibData() {
+                    FuncsHeaderPath = options.FilePath,
+                    RuntimeData = new RuntimeData()
+                    {
+                        PerPlatformPathes = new Dictionary<Platform, string>()
+                        {
+                            { Platform.Windows, "runtimes/win-x64/freetype.dll" },
+                            { Platform.Linux, "runtimes/linux-x64/libfreetype.so" },
+                            { Platform.Android, "libfreetype.so" },
+                        }
+                    },
+                    LibName="FT"
+                    } },
                 options.OutDir,
-                "runtimes/win-x64/freetype.dll",
                 "FreeTypeBinding",
-                "FT",
-                anonymousEnumName: "FT_Error",
-
+                anonymousEnumPrefixes: new List<string>() { "FT_Err" },
                typedefStrategies: new Dictionary<string, TypedefStrategy>()
                {
                    { "FT_Error", TypedefStrategy.AsIs}
+               },
+               notFoundTypesOverrides: new Dictionary<string, string>()
+               {
+                   { "FT_Error", "FT_Err"}
                },
                fieldParametersTypeOverrides: new Dictionary<string, string>()
                {

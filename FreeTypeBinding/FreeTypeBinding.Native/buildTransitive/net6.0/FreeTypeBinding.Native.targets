@@ -7,4 +7,11 @@
 			<Visible>False</Visible>
 		</Content>
 	</ItemGroup>
+	<ItemGroup>
+		<Content Include="$(MSBuildThisFileDirectory)../../**/libfreetype.so">
+			<Link>%(RecursiveDir)%(Filename)%(Extension)</Link>
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+			<Visible>False</Visible>
+		</Content>
+	</ItemGroup>
 </Project>

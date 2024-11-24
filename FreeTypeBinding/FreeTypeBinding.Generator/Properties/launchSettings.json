@@ -2,7 +2,7 @@
   "profiles": {
     "FreeTypeBinding.Generator": {
       "commandName": "Project",
-      "commandLineArgs": "-o $(SolutionDir)FreeTypeBinding -f $(ProjectDir)headers\\main.h -i $(ProjectDir)\\headers -n FreeTypeBinding"
+      "commandLineArgs": "-o $(SolutionDir)FreeTypeBinding -f $(ProjectDir)headers\\freetype\\freetype.h -i $(ProjectDir)headers -n FreeTypeBinding"
     }
   }
 }
