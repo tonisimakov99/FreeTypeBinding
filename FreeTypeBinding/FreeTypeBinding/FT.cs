@@ -1,3 +1,5 @@
+using System.Runtime.InteropServices;
+
 namespace FreeTypeBinding
 {
     public unsafe class FT
@@ -25,17 +27,17 @@ namespace FreeTypeBinding
             return lib.FT_Done_FreeType(library);
         }
 
-        public FT_Err FT_New_Face(FT_LibraryRec_* library, byte* filepathname, int face_index, FT_FaceRec_** aface)
+        public FT_Err FT_New_Face(FT_LibraryRec_* library, byte* filepathname, CLong face_index, FT_FaceRec_** aface)
         {
             return lib.FT_New_Face(library, filepathname, face_index, aface);
         }
 
-        public FT_Err FT_New_Memory_Face(FT_LibraryRec_* library, byte* file_base, int file_size, int face_index, FT_FaceRec_** aface)
+        public FT_Err FT_New_Memory_Face(FT_LibraryRec_* library, byte* file_base, CLong file_size, CLong face_index, FT_FaceRec_** aface)
         {
             return lib.FT_New_Memory_Face(library, file_base, file_size, face_index, aface);
         }
 
-        public FT_Err FT_Open_Face(FT_LibraryRec_* library, FT_Open_Args_* args, int face_index, FT_FaceRec_** aface)
+        public FT_Err FT_Open_Face(FT_LibraryRec_* library, FT_Open_Args_* args, CLong face_index, FT_FaceRec_** aface)
         {
             return lib.FT_Open_Face(library, args, face_index, aface);
         }
@@ -70,7 +72,7 @@ namespace FreeTypeBinding
             return lib.FT_Request_Size(face, req);
         }
 
-        public FT_Err FT_Set_Char_Size(FT_FaceRec_* face, int char_width, int char_height, uint horz_resolution, uint vert_resolution)
+        public FT_Err FT_Set_Char_Size(FT_FaceRec_* face, CLong char_width, CLong char_height, uint horz_resolution, uint vert_resolution)
         {
             return lib.FT_Set_Char_Size(face, char_width, char_height, horz_resolution, vert_resolution);
         }
@@ -80,12 +82,12 @@ namespace FreeTypeBinding
             return lib.FT_Set_Pixel_Sizes(face, pixel_width, pixel_height);
         }
 
-        public FT_Err FT_Load_Glyph(FT_FaceRec_* face, uint glyph_index, FT_LOAD load_flags)
+        public FT_Err FT_Load_Glyph(FT_FaceRec_* face, uint glyph_index, int load_flags)
         {
             return lib.FT_Load_Glyph(face, glyph_index, load_flags);
         }
 
-        public FT_Err FT_Load_Char(FT_FaceRec_* face, uint char_code, FT_LOAD load_flags)
+        public FT_Err FT_Load_Char(FT_FaceRec_* face, CULong char_code, int load_flags)
         {
             return lib.FT_Load_Char(face, char_code, load_flags);
         }
@@ -110,7 +112,7 @@ namespace FreeTypeBinding
             return lib.FT_Get_Kerning(face, left_glyph, right_glyph, kern_mode, akerning);
         }
 
-        public FT_Err FT_Get_Track_Kerning(FT_FaceRec_* face, int point_size, int degree, int* akerning)
+        public FT_Err FT_Get_Track_Kerning(FT_FaceRec_* face, CLong point_size, int degree, CLong* akerning)
         {
             return lib.FT_Get_Track_Kerning(face, point_size, degree, akerning);
         }
@@ -130,17 +132,17 @@ namespace FreeTypeBinding
             return lib.FT_Get_Charmap_Index(charmap);
         }
 
-        public uint FT_Get_Char_Index(FT_FaceRec_* face, uint charcode)
+        public uint FT_Get_Char_Index(FT_FaceRec_* face, CULong charcode)
         {
             return lib.FT_Get_Char_Index(face, charcode);
         }
 
-        public uint FT_Get_First_Char(FT_FaceRec_* face, uint* agindex)
+        public CULong FT_Get_First_Char(FT_FaceRec_* face, uint* agindex)
         {
             return lib.FT_Get_First_Char(face, agindex);
         }
 
-        public uint FT_Get_Next_Char(FT_FaceRec_* face, uint char_code, uint* agindex)
+        public CULong FT_Get_Next_Char(FT_FaceRec_* face, CULong char_code, uint* agindex)
         {
             return lib.FT_Get_Next_Char(face, char_code, agindex);
         }
@@ -175,12 +177,12 @@ namespace FreeTypeBinding
             return lib.FT_Get_FSType_Flags(face);
         }
 
-        public uint FT_Face_GetCharVariantIndex(FT_FaceRec_* face, uint charcode, uint variantSelector)
+        public uint FT_Face_GetCharVariantIndex(FT_FaceRec_* face, CULong charcode, CULong variantSelector)
         {
             return lib.FT_Face_GetCharVariantIndex(face, charcode, variantSelector);
         }
 
-        public int FT_Face_GetCharVariantIsDefault(FT_FaceRec_* face, uint charcode, uint variantSelector)
+        public int FT_Face_GetCharVariantIsDefault(FT_FaceRec_* face, CULong charcode, CULong variantSelector)
         {
             return lib.FT_Face_GetCharVariantIsDefault(face, charcode, variantSelector);
         }
@@ -190,42 +192,42 @@ namespace FreeTypeBinding
             return lib.FT_Face_GetVariantSelectors(face);
         }
 
-        public uint* FT_Face_GetVariantsOfChar(FT_FaceRec_* face, uint charcode)
+        public uint* FT_Face_GetVariantsOfChar(FT_FaceRec_* face, CULong charcode)
         {
             return lib.FT_Face_GetVariantsOfChar(face, charcode);
         }
 
-        public uint* FT_Face_GetCharsOfVariant(FT_FaceRec_* face, uint variantSelector)
+        public uint* FT_Face_GetCharsOfVariant(FT_FaceRec_* face, CULong variantSelector)
         {
             return lib.FT_Face_GetCharsOfVariant(face, variantSelector);
         }
 
-        public int FT_MulDiv(int a, int b, int c)
+        public CLong FT_MulDiv(CLong a, CLong b, CLong c)
         {
             return lib.FT_MulDiv(a, b, c);
         }
 
-        public int FT_MulFix(int a, int b)
+        public CLong FT_MulFix(CLong a, CLong b)
         {
             return lib.FT_MulFix(a, b);
         }
 
-        public int FT_DivFix(int a, int b)
+        public CLong FT_DivFix(CLong a, CLong b)
         {
             return lib.FT_DivFix(a, b);
         }
 
-        public int FT_RoundFix(int a)
+        public CLong FT_RoundFix(CLong a)
         {
             return lib.FT_RoundFix(a);
         }
 
-        public int FT_CeilFix(int a)
+        public CLong FT_CeilFix(CLong a)
         {
             return lib.FT_CeilFix(a);
         }
 
-        public int FT_FloorFix(int a)
+        public CLong FT_FloorFix(CLong a)
         {
             return lib.FT_FloorFix(a);
         }
@@ -249,5 +251,49 @@ namespace FreeTypeBinding
         {
             return lib.FT_Face_SetUnpatentedHinting(face, value);
         }
+
+        public System.Int32 FT_LOAD_DEFAULT => lib.FT_LOAD_DEFAULT;
+        public CLong FT_LOAD_NO_SCALE => lib.FT_LOAD_NO_SCALE;
+        public CLong FT_LOAD_NO_HINTING => lib.FT_LOAD_NO_HINTING;
+        public CLong FT_LOAD_RENDER => lib.FT_LOAD_RENDER;
+        public CLong FT_LOAD_NO_BITMAP => lib.FT_LOAD_NO_BITMAP;
+        public CLong FT_LOAD_VERTICAL_LAYOUT => lib.FT_LOAD_VERTICAL_LAYOUT;
+        public CLong FT_LOAD_FORCE_AUTOHINT => lib.FT_LOAD_FORCE_AUTOHINT;
+        public CLong FT_LOAD_CROP_BITMAP => lib.FT_LOAD_CROP_BITMAP;
+        public CLong FT_LOAD_PEDANTIC => lib.FT_LOAD_PEDANTIC;
+        public CLong FT_LOAD_IGNORE_GLOBAL_ADVANCE_WIDTH => lib.FT_LOAD_IGNORE_GLOBAL_ADVANCE_WIDTH;
+        public CLong FT_LOAD_NO_RECURSE => lib.FT_LOAD_NO_RECURSE;
+        public CLong FT_LOAD_IGNORE_TRANSFORM => lib.FT_LOAD_IGNORE_TRANSFORM;
+        public CLong FT_LOAD_MONOCHROME => lib.FT_LOAD_MONOCHROME;
+        public CLong FT_LOAD_LINEAR_DESIGN => lib.FT_LOAD_LINEAR_DESIGN;
+        public CLong FT_LOAD_SBITS_ONLY => lib.FT_LOAD_SBITS_ONLY;
+        public CLong FT_LOAD_NO_AUTOHINT => lib.FT_LOAD_NO_AUTOHINT;
+        public CLong FT_LOAD_COLOR => lib.FT_LOAD_COLOR;
+        public CLong FT_LOAD_COMPUTE_METRICS => lib.FT_LOAD_COMPUTE_METRICS;
+        public CLong FT_LOAD_BITMAP_METRICS_ONLY => lib.FT_LOAD_BITMAP_METRICS_ONLY;
+        public CLong FT_LOAD_NO_SVG => lib.FT_LOAD_NO_SVG;
+        public CLong FT_LOAD_ADVANCE_ONLY => lib.FT_LOAD_ADVANCE_ONLY;
+        public CLong FT_LOAD_SVG_ONLY => lib.FT_LOAD_SVG_ONLY;
+        public CLong FT_FACE_FLAG_SCALABLE => lib.FT_FACE_FLAG_SCALABLE;
+        public CLong FT_FACE_FLAG_FIXED_SIZES => lib.FT_FACE_FLAG_FIXED_SIZES;
+        public CLong FT_FACE_FLAG_FIXED_WIDTH => lib.FT_FACE_FLAG_FIXED_WIDTH;
+        public CLong FT_FACE_FLAG_SFNT => lib.FT_FACE_FLAG_SFNT;
+        public CLong FT_FACE_FLAG_HORIZONTAL => lib.FT_FACE_FLAG_HORIZONTAL;
+        public CLong FT_FACE_FLAG_VERTICAL => lib.FT_FACE_FLAG_VERTICAL;
+        public CLong FT_FACE_FLAG_KERNING => lib.FT_FACE_FLAG_KERNING;
+        public CLong FT_FACE_FLAG_FAST_GLYPHS => lib.FT_FACE_FLAG_FAST_GLYPHS;
+        public CLong FT_FACE_FLAG_MULTIPLE_MASTERS => lib.FT_FACE_FLAG_MULTIPLE_MASTERS;
+        public CLong FT_FACE_FLAG_GLYPH_NAMES => lib.FT_FACE_FLAG_GLYPH_NAMES;
+        public CLong FT_FACE_FLAG_EXTERNAL_STREAM => lib.FT_FACE_FLAG_EXTERNAL_STREAM;
+        public CLong FT_FACE_FLAG_HINTER => lib.FT_FACE_FLAG_HINTER;
+        public CLong FT_FACE_FLAG_CID_KEYED => lib.FT_FACE_FLAG_CID_KEYED;
+        public CLong FT_FACE_FLAG_TRICKY => lib.FT_FACE_FLAG_TRICKY;
+        public CLong FT_FACE_FLAG_COLOR => lib.FT_FACE_FLAG_COLOR;
+        public CLong FT_FACE_FLAG_VARIATION => lib.FT_FACE_FLAG_VARIATION;
+        public CLong FT_FACE_FLAG_SVG => lib.FT_FACE_FLAG_SVG;
+        public CLong FT_FACE_FLAG_SBIX => lib.FT_FACE_FLAG_SBIX;
+        public CLong FT_FACE_FLAG_SBIX_OVERLAY => lib.FT_FACE_FLAG_SBIX_OVERLAY;
+        public System.Int32 FT_STYLE_FLAG_ITALIC => lib.FT_STYLE_FLAG_ITALIC;
+        public System.Int32 FT_STYLE_FLAG_BOLD => lib.FT_STYLE_FLAG_BOLD;
     }
 }

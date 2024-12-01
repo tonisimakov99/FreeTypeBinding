@@ -9,16 +9,14 @@
 		<Description>FreeType bindings for dotnet</Description>
 		<PackageProjectUrl>https://github.com/tonisimakov99/FreeTypeBinding</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/tonisimakov99/FreeTypeBinding</RepositoryUrl>
-		<PackageReleaseNotes>linux android runtimes</PackageReleaseNotes>
+		<PackageReleaseNotes>long to CLong, for multiplatform, predefined enums to constants</PackageReleaseNotes>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<PackageTags>FreeType;Bindings;freetype</PackageTags>
-		<Version>1.0.5</Version>
+		<Version>1.0.9</Version>
 	</PropertyGroup>
 
 	<ItemGroup>
 	  <PackageReference Include="FreeTypeBinding.Native" Version="1.0.1" />
 	</ItemGroup>
-
-
 
 </Project>

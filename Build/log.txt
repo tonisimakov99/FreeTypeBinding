@@ -1,0 +1,199 @@
+failed to get console mode for stdout: The handle is invalid.
+failed to get console mode for stdout: The handle is invalid.
+[1A[1B[0G[?25l[+] Building 0.0s (0/0)                                          docker:default
+[?25h[1A[0G[?25l[+] Building 0.1s (2/3)                                          docker:default
+[36m => [internal] load build definition from Dockerfile                       0.0s
+[0m[36m => => transferring dockerfile: 1.18kB                                     0.0s
+[0m[36m => [internal] load .dockerignore                                          0.0s
+[0m[36m => => transferring context: 2B                                            0.0s
+[0m => [internal] load metadata for docker.io/library/debian:latest           0.1s
+[?25h[1A[1A[1A[1A[1A[1A[0G[?25l[+] Building 0.3s (2/3)                                          docker:default
+[36m => [internal] load build definition from Dockerfile                       0.0s
+[0m[36m => => transferring dockerfile: 1.18kB                                     0.0s
+[0m[36m => [internal] load .dockerignore                                          0.0s
+[0m[36m => => transferring context: 2B                                            0.0s
+[0m => [internal] load metadata for docker.io/library/debian:latest           0.2s
+[?25h[1A[1A[1A[1A[1A[1A[0G[?25l[+] Building 0.4s (2/3)                                          docker:default
+[36m => [internal] load build definition from Dockerfile                       0.0s
+[0m[36m => => transferring dockerfile: 1.18kB                                     0.0s
+[0m[36m => [internal] load .dockerignore                                          0.0s
+[0m[36m => => transferring context: 2B                                            0.0s
+[0m => [internal] load metadata for docker.io/library/debian:latest           0.4s
+[?25h[1A[1A[1A[1A[1A[1A[0G[?25l[+] Building 0.6s (2/3)                                          docker:default
+[36m => [internal] load build definition from Dockerfile                       0.0s
+[0m[36m => => transferring dockerfile: 1.18kB                                     0.0s
+[0m[36m => [internal] load .dockerignore                                          0.0s
+[0m[36m => => transferring context: 2B                                            0.0s
+[0m => [internal] load metadata for docker.io/library/debian:latest           0.5s
+[?25h[1A[1A[1A[1A[1A[1A[0G[?25l[+] Building 0.7s (2/3)                                          docker:default
+[36m => [internal] load build definition from Dockerfile                       0.0s
+[0m[36m => => transferring dockerfile: 1.18kB                                     0.0s
+[0m[36m => [internal] load .dockerignore                                          0.0s
+[0m[36m => => transferring context: 2B                                            0.0s
+[0m => [internal] load metadata for docker.io/library/debian:latest           0.7s
+[?25h[1A[1A[1A[1A[1A[1A[0G[?25l[+] Building 0.9s (2/3)                                          docker:default
+[36m => [internal] load build definition from Dockerfile                       0.0s
+[0m[36m => => transferring dockerfile: 1.18kB                                     0.0s
+[0m[36m => [internal] load .dockerignore                                          0.0s
+[0m[36m => => transferring context: 2B                                            0.0s
+[0m => [internal] load metadata for docker.io/library/debian:latest           0.8s
+[?25h[1A[1A[1A[1A[1A[1A[0G[?25l[+] Building 1.0s (2/3)                                          docker:default
+[36m => [internal] load build definition from Dockerfile                       0.0s
+[0m[36m => => transferring dockerfile: 1.18kB                                     0.0s
+[0m[36m => [internal] load .dockerignore                                          0.0s
+[0m[36m => => transferring context: 2B                                            0.0s
+[0m => [internal] load metadata for docker.io/library/debian:latest           1.0s
+[?25h[1A[1A[1A[1A[1A[1A[0G[?25l[+] Building 1.2s (2/3)                                          docker:default
+[36m => [internal] load build definition from Dockerfile                       0.0s
+[0m[36m => => transferring dockerfile: 1.18kB                                     0.0s
+[0m[36m => [internal] load .dockerignore                                          0.0s
+[0m[36m => => transferring context: 2B                                            0.0s
+[0m => [internal] load metadata for docker.io/library/debian:latest           1.2s
+[?25h[1A[1A[1A[1A[1A[1A[0G[?25l[+] Building 1.3s (2/3)                                          docker:default
+[36m => [internal] load build definition from Dockerfile                       0.0s
+[0m[36m => => transferring dockerfile: 1.18kB                                     0.0s
+[0m[36m => [internal] load .dockerignore                                          0.0s
+[0m[36m => => transferring context: 2B                                            0.0s
+[0m => [internal] load metadata for docker.io/library/debian:latest           1.3s
+[?25h[1A[1A[1A[1A[1A[1A[0G[?25l[+] Building 1.5s (2/3)                                          docker:default
+[36m => [internal] load build definition from Dockerfile                       0.0s
+[0m[36m => => transferring dockerfile: 1.18kB                                     0.0s
+[0m[36m => [internal] load .dockerignore                                          0.0s
+[0m[36m => => transferring context: 2B                                            0.0s
+[0m => [internal] load metadata for docker.io/library/debian:latest           1.5s
+[?25h[1A[1A[1A[1A[1A[1A[0G[?25l[+] Building 1.7s (2/3)                                          docker:default
+[36m => [internal] load build definition from Dockerfile                       0.0s
+[0m[36m => => transferring dockerfile: 1.18kB                                     0.0s
+[0m[36m => [internal] load .dockerignore                                          0.0s
+[0m[36m => => transferring context: 2B                                            0.0s
+[0m => [internal] load metadata for docker.io/library/debian:latest           1.6s
+[?25h[1A[1A[1A[1A[1A[1A[0G[?25l[+] Building 1.8s (2/3)                                          docker:default
+[36m => [internal] load build definition from Dockerfile                       0.0s
+[0m[36m => => transferring dockerfile: 1.18kB                                     0.0s
+[0m[36m => [internal] load .dockerignore                                          0.0s
+[0m[36m => => transferring context: 2B                                            0.0s
+[0m => [internal] load metadata for docker.io/library/debian:latest           1.8s
+[?25h[1A[1A[1A[1A[1A[1A[0G[?25l[+] Building 2.0s (2/3)                                          docker:default
+[36m => [internal] load build definition from Dockerfile                       0.0s
+[0m[36m => => transferring dockerfile: 1.18kB                                     0.0s
+[0m[36m => [internal] load .dockerignore                                          0.0s
+[0m[36m => => transferring context: 2B                                            0.0s
+[0m => [internal] load metadata for docker.io/library/debian:latest           1.9s
+[?25h[1A[1A[1A[1A[1A[1A[0G[?25l[+] Building 2.1s (2/3)                                          docker:default
+[36m => [internal] load build definition from Dockerfile                       0.0s
+[0m[36m => => transferring dockerfile: 1.18kB                                     0.0s
+[0m[36m => [internal] load .dockerignore                                          0.0s
+[0m[36m => => transferring context: 2B                                            0.0s
+[0m => [internal] load metadata for docker.io/library/debian:latest           2.1s
+[?25h[1A[1A[1A[1A[1A[1A[0G[?25l[+] Building 2.3s (2/3)                                          docker:default
+[36m => [internal] load build definition from Dockerfile                       0.0s
+[0m[36m => => transferring dockerfile: 1.18kB                                     0.0s
+[0m[36m => [internal] load .dockerignore                                          0.0s
+[0m[36m => => transferring context: 2B                                            0.0s
+[0m => [internal] load metadata for docker.io/library/debian:latest           2.2s
+[?25h[1A[1A[1A[1A[1A[1A[0G[?25l[+] Building 2.4s (16/18)                                        docker:default
+[36m => CACHED [ 7/15] RUN apt-get install -y gcc                              0.0s
+[0m[36m => CACHED [ 8/15] RUN apt-get install -y xz-utils                         0.0s
+[0m[36m => CACHED [ 9/15] RUN apt-get install binutils                            0.0s
+[0m[36m => CACHED [10/15] RUN apt-get install -y unzip                            0.0s
+[0m[36m => CACHED [11/15] RUN unzip android-ndk-r27c-linux.zip                    0.0s
+[0m[36m => CACHED [12/15] RUN tar -xf freetype-2.13.3.tar.xz                      0.0s
+[0m[36m => CACHED [13/15] WORKDIR freetype-2.13.3                                 0.0s
+[0m => [14/15] RUN ./configure --host=x86_64-linux --prefix=/android-ndk-r27  0.1s
+[?25h[1A[1A[1A[1A[1A[1A[1A[1A[1A[0G[?25l[+] Building 2.6s (16/18)                                        docker:default
+[36m => CACHED [ 7/15] RUN apt-get install -y gcc                              0.0s
+[0m[36m => CACHED [ 8/15] RUN apt-get install -y xz-utils                         0.0s
+[0m[36m => CACHED [ 9/15] RUN apt-get install binutils                            0.0s
+[0m[36m => CACHED [10/15] RUN apt-get install -y unzip                            0.0s
+[0m[36m => CACHED [11/15] RUN unzip android-ndk-r27c-linux.zip                    0.0s
+[0m[36m => CACHED [12/15] RUN tar -xf freetype-2.13.3.tar.xz                      0.0s
+[0m[36m => CACHED [13/15] WORKDIR freetype-2.13.3                                 0.0s
+[0m => [14/15] RUN ./configure --host=x86_64-linux --prefix=/android-ndk-r27  0.2s
+[?25h[1A[1A[1A[1A[1A[1A[1A[1A[1A[0G[?25l[+] Building 2.7s (16/18)                                        docker:default
+[36m => CACHED [ 7/15] RUN apt-get install -y gcc                              0.0s
+[0m[36m => CACHED [ 8/15] RUN apt-get install -y xz-utils                         0.0s
+[0m[36m => CACHED [ 9/15] RUN apt-get install binutils                            0.0s
+[0m[36m => CACHED [10/15] RUN apt-get install -y unzip                            0.0s
+[0m[36m => CACHED [11/15] RUN unzip android-ndk-r27c-linux.zip                    0.0s
+[0m[36m => CACHED [12/15] RUN tar -xf freetype-2.13.3.tar.xz                      0.0s
+[0m[36m => CACHED [13/15] WORKDIR freetype-2.13.3                                 0.0s
+[0m => [14/15] RUN ./configure --host=x86_64-linux --prefix=/android-ndk-r27  0.3s
+[?25h[1A[1A[1A[1A[1A[1A[1A[1A[1A[0G[?25l[+] Building 2.8s (16/18)                                        docker:default
+[36m => CACHED [ 7/15] RUN apt-get install -y gcc                              0.0s
+[0m[36m => CACHED [ 8/15] RUN apt-get install -y xz-utils                         0.0s
+[0m[36m => CACHED [ 9/15] RUN apt-get install binutils                            0.0s
+[0m[36m => CACHED [10/15] RUN apt-get install -y unzip                            0.0s
+[0m[36m => CACHED [11/15] RUN unzip android-ndk-r27c-linux.zip                    0.0s
+[0m[36m => CACHED [12/15] RUN tar -xf freetype-2.13.3.tar.xz                      0.0s
+[0m[36m => CACHED [13/15] WORKDIR freetype-2.13.3                                 0.0s
+[0m => [14/15] RUN ./configure --host=x86_64-linux --prefix=/android-ndk-r27  0.4s
+[?25h[1A[1A[1A[1A[1A[1A[1A[1A[1A[0G[?25l[+] Building 2.9s (17/18)                                        docker:default
+[36m => [internal] load build definition from Dockerfile                       0.0s
+[0m[36m => => transferring dockerfile: 1.18kB                                     0.0s
+[0m[36m => [internal] load .dockerignore                                          0.0s
+[0m[36m => => transferring context: 2B                                            0.0s
+[0m[36m => [internal] load metadata for docker.io/library/debian:latest           2.3s
+[0m[36m => [ 1/15] FROM docker.io/library/debian@sha256:10901ccd8d249047f9761845  0.0s
+[0m[36m => CACHED [ 2/15] RUN apt-get update && apt-get upgrade -y                0.0s
+[0m[36m => CACHED [ 3/15] RUN apt-get install -y wget                             0.0s
+[0m[36m => CACHED [ 4/15] RUN wget https://dl.google.com/android/repository/andr  0.0s
+[0m[36m => CACHED [ 5/15] RUN wget https://download.savannah.gnu.org/releases/fr  0.0s
+[0m[36m => CACHED [ 6/15] RUN apt-get install -y make                             0.0s
+[0m[36m => CACHED [ 7/15] RUN apt-get install -y gcc                              0.0s
+[0m[36m => CACHED [ 8/15] RUN apt-get install -y xz-utils                         0.0s
+[0m[36m => CACHED [ 9/15] RUN apt-get install binutils                            0.0s
+[0m[36m => CACHED [10/15] RUN apt-get install -y unzip                            0.0s
+[0m[36m => CACHED [11/15] RUN unzip android-ndk-r27c-linux.zip                    0.0s
+[0m[36m => CACHED [12/15] RUN tar -xf freetype-2.13.3.tar.xz                      0.0s
+[0m[36m => CACHED [13/15] WORKDIR freetype-2.13.3                                 0.0s
+[0m[31m => ERROR [14/15] RUN ./configure --host=x86_64-linux --prefix=/android-n  0.5s
+[0m[?25h------
+ > [14/15] RUN ./configure --host=x86_64-linux --prefix=/android-ndk-r27c/toolchains/llvm/prebuilt//sysroot/usr --enable-shared:
+0.342 
+0.342 FreeType build system -- automatic system detection
+0.342 
+0.342 The following settings are used:
+0.342 
+0.342   platform                    unix
+0.342   compiler                    /android-ndk-r27c/toolchains/llvm/prebuilt//bin/x86_64-linux-android21-clang
+0.342   configuration directory     ./builds/unix
+0.342   configuration rules         ./builds/unix/unix.mk
+0.342 
+0.342 If this does not correspond to your system or settings please remove the file
+0.342 `config.mk' from this directory then read the INSTALL file for help.
+0.342 
+0.342 Otherwise, simply type `make' again to build the library,
+0.342 or `make refdoc' to build the API reference (this needs Python >= 3.5).
+0.342 
+0.344 Generating modules list in ./objs/ftmodule.h...
+0.344 done.
+0.346 * module: truetype  (Windows/Mac font files with extension *.ttf or *.ttc)
+0.346 * module: type1     (Postscript font files with extension *.pfa or *.pfb)
+0.347 * module: cff       (OpenType fonts with extension *.otf)
+0.348 * module: cid       (Postscript CID-keyed fonts, no known extension)
+0.348 * module: pfr       (PFR/TrueDoc font files with extension *.pfr)
+0.349 * module: type42    (Type 42 font files with no known extension)
+0.350 * module: winfnt    (Windows bitmap fonts with extension *.fnt or *.fon)
+0.350 * module: pcf       (pcf bitmap fonts)
+0.351 * module: bdf       (bdf bitmap fonts)
+0.352 * module: sfnt      (helper module for TrueType & OpenType formats)
+0.352 * module: autofit   (automatic hinting module)
+0.353 * module: pshinter  (Postscript hinter module)
+0.354 * module: smooth    (anti-aliased bitmap renderer)
+0.354 * module: raster    (monochrome bitmap renderer)
+0.355 * module: ot-svg    (OT-SVG glyph renderer module)
+0.356 * module: sdf       (signed distance field renderer)
+0.357 * module: bsdf      (bitmap to signed distance field converter)
+0.358 * module: psaux     (Postscript Type 1 & Type 2 helper module)
+0.358 * module: psnames   (Postscript & Unicode Glyph name handling)
+0.359 cd builds/unix; \
+0.359         ./configure  '--host=x86_64-linux' '--prefix=/android-ndk-r27c/toolchains/llvm/prebuilt//sysroot/usr' '--enable-shared'
+0.412 checking build system type... x86_64-pc-linux-gnu
+0.434 checking host system type... x86_64-pc-linux-gnu
+0.438 checking for x86_64-linux-gcc... /android-ndk-r27c/toolchains/llvm/prebuilt//bin/x86_64-linux-android21-clang
+0.449 checking whether the C compiler works... no
+0.452 configure: error: in '/freetype-2.13.3/builds/unix':
+0.453 configure: error: C compiler cannot create executables
+0.453 See 'config.log' for more details
+0.461 make: *** [builds/unix/detect.mk:91: setup] Error 77
+------

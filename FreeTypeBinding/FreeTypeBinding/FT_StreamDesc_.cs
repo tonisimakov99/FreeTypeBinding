@@ -1,11 +1,11 @@
+using System.Runtime.InteropServices;
+
 namespace FreeTypeBinding
 {
-    using System.Runtime.InteropServices;
-
     [StructLayout(LayoutKind.Sequential)]
     public unsafe struct FT_StreamDesc_
     {
-        public int value;
+        public CLong value;
         public void* pointer;
     }
 }

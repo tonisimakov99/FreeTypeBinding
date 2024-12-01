@@ -2,6 +2,7 @@
 using CommandLine;
 using Microsoft.Extensions.Logging;
 using Serilog;
+using System;
 using System.Collections.Generic;
 
 namespace FreeTypeBinding.Generator
@@ -24,6 +25,9 @@ namespace FreeTypeBinding.Generator
 
             var loggerFactory = LoggerFactory.Create((builder) => { builder.AddSerilog(Log.Logger); });
 
+            var primitveTypes = new Dictionary<CppSharp.AST.PrimitiveType, string>(Utils.PrimitiveTypesToCsTypesMap);
+            primitveTypes[CppSharp.AST.PrimitiveType.Long] = "CLong";
+            primitveTypes[CppSharp.AST.PrimitiveType.ULong] = "CULong";
 
             BindingGenerator.Generator.Generate(
                 new[] { options.IncludePath },
@@ -34,15 +38,30 @@ namespace FreeTypeBinding.Generator
                     {
                         PerPlatformPathes = new Dictionary<Platform, string>()
                         {
-                            { Platform.Windows, "runtimes/win-x64/freetype.dll" },
-                            { Platform.Linux, "runtimes/linux-x64/libfreetype.so" },
+                            { Platform.Windows, "runtimes/win-x64/native/freetype.dll" },
+                            { Platform.Linux, "runtimes/linux-x64/native/libfreetype.so" },
                             { Platform.Android, "libfreetype.so" },
                         }
                     },
                     LibName="FT"
-                    } },
+                    },
+                    new LibData() {
+                    FuncsHeaderPath = "C:\\Users\\Anton\\Desktop\\FreeTypeBinding\\FreeTypeBinding\\FreeTypeBinding.Generator\\headers\\freetype\\ftlogging.h",
+                    RuntimeData = new RuntimeData()
+                    {
+                        PerPlatformPathes = new Dictionary<Platform, string>()
+                        {
+                            { Platform.Windows, "runtimes/win-x64/native/freetype.dll" },
+                            { Platform.Linux, "runtimes/linux-x64/native/libfreetype.so" },
+                            { Platform.Android, "libfreetype.so" },
+                        }
+                    },
+                    LibName="FTlogging"
+                    }
+                },
                 options.OutDir,
                 "FreeTypeBinding",
+                primitiveTypesToCsTypesMap:primitveTypes,
                 anonymousEnumPrefixes: new List<string>() { "FT_Err" },
                typedefStrategies: new Dictionary<string, TypedefStrategy>()
                {
@@ -54,12 +73,12 @@ namespace FreeTypeBinding.Generator
                },
                fieldParametersTypeOverrides: new Dictionary<string, string>()
                {
-                   {"load_flags", "FT_LOAD" },
-                   {"face_flags", "FT_FACE_FLAG" },
-                   {"style_flags", "FT_STYLE_FLAG" },
+                   //{"load_flags", "FT_LOAD" },
+                   //{"face_flags", "FT_FACE_FLAG" },
+                   //{"style_flags", "FT_STYLE_FLAG" },
                    {"pixel_mode", "FT_Pixel_Mode_" }
                },
-               preprocessedEnumSearchParameters: new List<EnumSearchParameter>()
+               preprocessedConstantSearchParameters: new List<EnumSearchParameter>()
                {
                    new EnumSearchParameter(){Prefix="FT_LOAD", ExcludePrefix="FT_LOAD_TARGET" },
                    new EnumSearchParameter(){Prefix="FT_FACE_FLAG" },
